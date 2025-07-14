@@ -1,26 +1,162 @@
 @import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --main-color: #117C6F;
+    --secondary-color: #289C8E;
+    --light-cyan: #3FC4B2;
+    --pale-mint: #8DE5DB;
+    --soft-aqua: #B2F0E8;
+    --blue-sky: #35B6E6;
+    --hover-color: #b2f0e841;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+     :root {
+        --main-color: #0FA0AA;
+        --secondary-color: #02BEC1;
+        --bar-color: #28b9c35f;
+    }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+body,
+html {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+
+/* تخصيص تقويم React */
+
+.react-calendar {
+    border: none !important;
+}
+
+.calendar-custom .react-calendar__tile {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    transition: background 0.2s;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+}
+
+.calendar-custom .react-calendar__tile--active {
+    background: var(--blue-sky) !important;
+    color: white;
+}
+
+.calendar-custom .react-calendar__tile:hover {
+    background: #8DE5DB;
+    color: black;
+}
+
+.calendar-custom .react-calendar__navigation button {
+    color: #117C6F;
+    font-weight: bold;
+}
+
+@import "tailwindcss";
+@import "tw-animate-css";
+:root {
+    --background: #000000;
+    --foreground: #171717;
+    --main-color: #117C6F;
+    --secondary-color: #289C8E;
+    --light-cyan: #3FC4B2;
+    --pale-mint: #8DE5DB;
+    --soft-aqua: #B2F0E8;
+    --blue-sky: #35B6E6;
+    --hover-color: #b2f0e841;
+}
+
+@media (prefers-color-scheme: dark) {
+     :root {
+        --background: #e7fdff;
+        --foreground: #000000;
+        --main-color: #0FA0AA;
+        --secondary-color: #02BEC1;
+        --bar-color: #28b9c35f;
+    }
+}
+
+body,
+html {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+
+/* تخصيص تقويم React */
+
+.react-calendar {
+    border: none !important;
+}
+
+.calendar-custom .react-calendar__tile {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    transition: background 0.2s;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    -o-transition: background 0.2s;
+}
+
+.calendar-custom .react-calendar__tile--active {
+    background: var(--blue-sky) !important;
+    color: white;
+}
+
+.calendar-custom .react-calendar__tile:hover {
+    background: #8DE5DB;
+    color: black;
+}
+
+.calendar-custom .react-calendar__navigation button {
+    color: #117C6F;
+    font-weight: bold;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-overflow: clip !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    display: inline !important;
+    width: auto !important;
+    max-width: none !important;
+    text-decoration: none !important;
+}
+
+.react-calendar__navigation__prev2-button,
+.react-calendar__navigation__next2-button {
+    display: none !important;
+}
+
+.react-calendar__tile--now:hover,
+.react-calendar__tile--now,
+.react-calendar__tile--now:focus {
+    background: var(--blue-sky) !important;
+    border-radius: 10px;
+    color: white !important;
+}
+
+.react-calendar__tile--active:hover,
+.react-calendar__tile--active,
+.react-calendar__tile--active:focus {
+    background: var(--pale-mint) !important;
+    border-radius: 10px;
+    color: white !important;
+}
+
+.react-calendar__month-view__days__day--weekend {
+    color: gray !important;
+}
+
+.react-calendar__tile,
+.react-calendar__month-view__days__day {
+    color: gray !important;
 }
