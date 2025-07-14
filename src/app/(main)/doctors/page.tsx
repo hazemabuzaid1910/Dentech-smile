@@ -54,6 +54,7 @@ export default function DoctorsPage() {
                         placeholder="Enter your password..."
                         className="w-full py-3 bg-gray-100 outline-none"
                         onChange={(e) => setPassword(e.target.value)}
+                        value={password}
                       />
                       <div className="cursor-pointer" onClick={handletoggle}>
                         {openEye ? <FaRegEye size={20} /> : <FaEyeSlash size={20} />}

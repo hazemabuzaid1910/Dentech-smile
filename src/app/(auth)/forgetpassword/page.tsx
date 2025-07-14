@@ -58,7 +58,8 @@ function handletoggle(){
               name="" id="" 
               className='w-full px-2 py-3 outline-none' 
               placeholder='Enter Your Password...'
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e)=>setConfirmPassword(e.target.value)}
+              value={confirmPassword}
               />
                  <div className='cursor-pointer' onClick={handletoggle}>{openEye?<FaRegEye size={20}/>:<FaEyeSlash size={20}/>}</div>  
 
