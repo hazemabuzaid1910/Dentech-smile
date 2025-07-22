@@ -34,7 +34,7 @@ const books = [
          
          <div className="w-[150px] h-[150px] rounded-full overflow-hidden relative">
           <Image
-            src="/example/hr/17.png"
+            src="/images.jfif"
             alt=""
             fill
             className="object-cover"

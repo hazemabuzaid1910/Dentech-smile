@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import {  FaSearch } from "react-icons/fa";
+import {  FaPlusCircle, FaSearch } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { IoFilter } from "react-icons/io5";
 import Link from "next/link";
@@ -79,7 +79,7 @@ const DoctorsTable = () => {
         </thead>
         <tbody>
           {doctorsToShow.map((doc) => (
-            <tr key={doc.id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:scale-102 hover:bg-gray-50">
+            <tr key={doc.id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
              <td>
               <input type="checkbox" name="" id="" />
              </td>
@@ -103,18 +103,24 @@ const DoctorsTable = () => {
                   
                 </button>
               </td>
-              <td className="p-2 ">
-              <div className="flex items-center justify-center gap-4">
-                <button>
-                  <MdDelete size={22} color="#f07575" className="cursor-pointer"/>
+              <td className="flex items-center justify-center p-2">
+              {false&&<div className="flex items-center justify-center gap-4">
+                <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 rounded-xl group hover:text-white hover:bg-red-400">
+                  <MdDelete size={22}  className="text-red-400 cursor-pointer group-hover:text-white"/>
+                  Delete
                 </button>
                   
-                  <button>
-                                     <MdModeEdit size={22} color="var(--blue-sky)"  className="cursor-pointer"/>
-
-                  </button>
-              </div>
-               
+                   <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 rounded-xl group hover:text-white hover:bg-blue-400">
+                  <MdModeEdit size={22}  className="text-blue-400 cursor-pointer group-hover:text-white"/>
+                  Edite
+                </button>
+              </div>}
+               {true&&<div>
+                  <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 rounded-xl group hover:text-white hover:bg-blue-400">
+                  <FaPlusCircle size={22}  className="text-blue-400 cursor-pointer group-hover:text-white"/>
+                  add request
+                </button>
+               </div>}
                 
               </td>
             </tr>

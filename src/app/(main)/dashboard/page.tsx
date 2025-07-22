@@ -64,7 +64,7 @@ export default function Home() {
     <div className="grid w-full grid-cols-12 gap-5 px-10 py-5 ">
    
       <div className="grid w-full grid-cols-12 col-span-9 gap-4 ">
-           <div className="flex justify-between w-full col-span-12 py-5 ">
+           <div className="flex justify-between w-full col-span-12 ">
               <h1 className="text-[28px] font-[600]">{isAdmin? "Radiology":"Admin"}</h1>
               <div className="flex items-center px-5 bg-white rounded-xl">
                <select name="" id=""  className="w-full outline-0">
@@ -95,7 +95,7 @@ export default function Home() {
           key={index}
           icon={report.icon}
           text1={report.text1}
-          text2={report.text2}
+          title={report.text1}
           color={report.color}
         />
       ))}
@@ -131,7 +131,7 @@ export default function Home() {
 </div>
 
 </div>
-<div className="flex flex-col col-span-3 gap-5 p-2 my-5 bg-white rounded-xl">
+<div className="flex flex-col col-span-3 gap-5 p-2 bg-white rounded-xl">
   <h1 className="mb-4 text-xl font-semibold">Calendar</h1>
   <Calendar formatShortWeekday={formatWeekday} 
  locale="en-US"
