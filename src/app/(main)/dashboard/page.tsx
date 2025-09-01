@@ -1,37 +1,81 @@
 "use client";
 import StatisticsCard from "../../../components/StatisticsCard";
 import Chart from '../../../components/Chart'
-import { FaHeartbeat, FaStethoscope, FaUser } from "react-icons/fa";
+import {FaStethoscope, FaUser } from "react-icons/fa";
 import {  MdReport  } from "react-icons/md";
 import Table from '../../../components/Table'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import ReportCard from '../../../components/ReportCard';
-import useAuthStore from "../../(auth)/signin/AuthStore";
+import useAuthStore from "../../store/AuthStore";
 import { FaCirclePlus } from "react-icons/fa6";
+import useAdminStore from "@/app/store/AdminStore";
+import { useEffect } from "react";
+import { MdOutlineSupervisorAccount } from "react-icons/md";
+import { MdOutlinePendingActions } from "react-icons/md";
+import { FaImage } from "react-icons/fa";
+
 export default function Home() {
   const {role_name}=useAuthStore();
-  const isAdmin=role_name==="admin";
+     const {getStatistic,statistics,getRadStatistic,Rad_statistics}=useAdminStore()
+  const isRadiology=role_name==="radiologyManager";
+    const isAdmin=role_name==="admin";
+  const isAdmission=role_name==="AdmissionManager";
+  useEffect(()=>{
+    if(role_name==="admin"){
+getStatistic()
+    }
+       if(role_name==="radiologyManager"){
+getRadStatistic()
+    }
+    
+    
+  },[])
+  const radStatsData = [
+  {
+    h1: Rad_statistics?.total_patients ?? "0", 
+    p: "Total Patients",
+    icon: <FaUser color="#ffffff" size={25} />,
+    color: "bg-[#FF1C93]"
+  },
+  {
+    h1: Rad_statistics?.images_this_week ?? "0",
+    p: "Images This Week",
+    icon: <FaImage color="#ffffff" size={25} />,
+    color: "bg-[#0780FA]"
+  },
+  {
+    h1: Rad_statistics?.pending_requests ?? "0",
+    p: "Pending Requests",
+    icon: <MdOutlinePendingActions color="#ffffff" size={25} />,
+    color: "bg-[#14BEBF]"
+  },
+];
+
   const reports = [
   {
     icon: <FaCirclePlus color="#FFD700" size={30} />,
     text1: 'Add a radiology department official',
     text2: '10 minutes ago',
-    color: "bg-[#ea6c1e]"
+    color: "#ea6c1e",
+    role:"6"
   },
   {
     icon: <FaCirclePlus color="#FFD700" size={30} />,
     text1: 'Add an admissions department official',
     text2: '20 minutes ago',
-    color: "bg-[#78aae7]"
+    color: "#78aae7",
+    role:"7"
   },
   {
     icon: <FaCirclePlus color="#FFD700" size={30} />,
     text1: 'Add practical supervisors',
     text2: '1 hour ago',
-    color: "bg-[#d44c4c]"
+    color: "#d44c4c",
+    role:"3"
   },
 ];
+
  const formatWeekday = (locale: string | undefined, date: Date) => {
     return date.toLocaleDateString(locale ?? 'en-US', { weekday: 'short' }).charAt(0);
   };
@@ -42,30 +86,31 @@ export default function Home() {
   ];
   const statsData = [
   {
-    h1: "64,7k",
+    h1: statistics?.patients ?? "0", 
     p: "Total Patients",
     icon: <FaUser color="#ffffff" size={25} />,
     color: "bg-[#FF1C93]"
   },
   {
-    h1: "12,3k",
-    p: "Heart Surgeries",
-    icon: <FaHeartbeat color="#ffffff" size={25} />,
+    h1: statistics?.supervisors ?? "0",
+    p: "Supervisors",
+    icon: <MdOutlineSupervisorAccount color="#ffffff" size={25} />,
     color: "bg-[#0780FA]"
   },
   {
-    h1: "8,9k",
+    h1: statistics?.students ?? "0",
     p: "Doctors",
     icon: <FaStethoscope color="#ffffff" size={25} />,
     color: "bg-[#14BEBF]"
   },
 ];
+
   return (
     <div className="grid w-full grid-cols-12 gap-5 px-10 py-5 ">
    
       <div className="grid w-full grid-cols-12 col-span-9 gap-4 ">
            <div className="flex justify-between w-full col-span-12 ">
-              <h1 className="text-[28px] font-[600]">{isAdmin? "Radiology":"Admin"}</h1>
+              <h1 className="text-[28px] font-[600]">{isAdmin? "Admin":(isRadiology?"Radiology":"Admission Office")}</h1>
               <div className="flex items-center px-5 bg-white rounded-xl">
                <select name="" id=""  className="w-full outline-0">
                 <option value="">this week</option>
@@ -73,36 +118,47 @@ export default function Home() {
                </select>
                </div>
       </div>
-        {statsData.map((item,index)=>(
-          <div           key={index}
-  className="col-span-4">
-          <StatisticsCard 
+       {isRadiology
+  ? radStatsData.map((item, index) => (
+      <div key={index} className="col-span-4">
+        <StatisticsCard 
           color={item.color}
           icon={item.icon}
           title={item.p}
           value={item.h1}
-          />
-</div>
-))}
- <div className="flex col-span-8 p-5 bg-white rounded-xl">
+        />
+      </div>
+    ))
+  : statsData.map((item, index) => (
+      <div key={index} className="col-span-4">
+        <StatisticsCard 
+          color={item.color}
+          icon={item.icon}
+          title={item.p}
+          value={item.h1}
+        />
+      </div>
+    ))
+}
+
+ <div className={`flex w-full ${isAdmin?"col-span-8":"col-span-12"} p-5 bg-white rounded-xl`}>
         <Chart />
       </div>
-      <div className="flex flex-col col-span-4 gap-3 p-5 bg-white rounded-xl">
+   { isAdmin&&  <div className="flex flex-col col-span-4 gap-3 p-5 bg-white rounded-xl">
         <h1 className="text-[18px] font-[600]">sections</h1>
            <div className="flex flex-col h-full gap-4">
       {reports.map((report, index) => (
         <ReportCard
           key={index}
           icon={report.icon}
+          role={report.role}
           text1={report.text1}
           title={report.text1}
           color={report.color}
         />
       ))}
     </div>
-
-
-      </div>
+      </div>}
       <div className="col-span-12">
          <Table
                 data={articlesData.slice(0, 3)}

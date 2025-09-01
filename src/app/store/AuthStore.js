@@ -4,7 +4,6 @@ import { persist } from 'zustand/middleware';
 const useAuthStore = create(
     persist(
         (set) => {
-            // القيم الأولية من localStorage إذا وجدت
             const initialToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
             const initialRole = typeof window !== 'undefined' ? localStorage.getItem('role_name') : null;
             const initialNationalNum = typeof window !== 'undefined' ? localStorage.getItem('nationalNumber') : null;
@@ -20,7 +19,6 @@ const useAuthStore = create(
                 isAuthenticated: !!initialToken,
                 role_name: initialRole,
 
-                // تسجيل الدخول
                 signIn: async(national_number, password) => {
                     set({ loading: true, error: null });
                     try {
@@ -48,7 +46,107 @@ const useAuthStore = create(
                             loading: false
                         });
 
-                        // حفظ البيانات في localStorage
+                        if (typeof window !== 'undefined') {
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('role_name', data.role_name);
+                            localStorage.setItem('nationalNumber', national_number);
+                            document.cookie = `token=${data.token}; path=/; max-age=3600; samesite=lax`;
+                        }
+
+                    } catch (error) {
+                        set({
+                            error: error.message || 'Something went wrong',
+                            loading: false,
+                        });
+                    }
+                },
+                sendOtp: async(phone_number) => {
+                    set({ loading: true, error: null });
+                    try {
+                        const response = await fetch('http://127.0.0.1:8000/api/sendOtp', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ phone_number }),
+                        });
+
+                        if (!response.ok) {
+                            const data = await response.json();
+                            throw new Error(data.error || 'Login failed');
+                        }
+                        const data = await response.json();
+                        console.log(data)
+
+                        set({
+                            user: { phone_number },
+                            loading: false
+                        });
+                    } catch (error) {
+                        set({
+                            error: error.message || 'Something went wrong',
+                            loading: false,
+                        });
+                    }
+                },
+                verifyOtp: async(phone_number, otp) => {
+                    set({ loading: true, error: null });
+                    try {
+                        const response = await fetch('http://127.0.0.1:8000/api/verifyOtp', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ phone_number, otp }),
+                        });
+
+                        if (!response.ok) {
+                            const data = await response.json();
+                            throw new Error(data.error || 'Login failed');
+                        }
+                        const data = await response.json();
+                        console.log(data)
+
+                        set({
+                            user: { phone_number },
+                            loading: false
+                        });
+                    } catch (error) {
+                        set({
+                            error: error.message || 'Something went wrong',
+                            loading: false,
+                        });
+                    }
+                },
+                resetpassowrd: async(phone_number, password, password_confirmation) => {
+                    set({ loading: true, error: null });
+                    try {
+                        const response = await fetch('http://127.0.0.1:8000/api/resetPassword', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ phone_number, password, password_confirmation }),
+                        });
+
+                        if (!response.ok) {
+                            const data = await response.json();
+                            throw new Error(data.error || 'Login failed');
+                        }
+                        const data = await response.json();
+                        console.log(data)
+
+                        set({
+                            user: { national_number, role_name: data.role_name },
+                            token: data.token,
+                            role_name: data.role_name,
+                            isAuthenticated: true,
+                            loading: false
+                        });
+
                         if (typeof window !== 'undefined') {
                             localStorage.setItem('token', data.token);
                             localStorage.setItem('role_name', data.role_name);
@@ -64,7 +162,6 @@ const useAuthStore = create(
                     }
                 },
 
-                // تسجيل الخروج
                 logOut: async() => {
                     set({ loading: true, error: null });
                     const token = useAuthStore.getState().token;
@@ -84,7 +181,6 @@ const useAuthStore = create(
                             throw new Error(data.error || 'Logout failed');
                         }
 
-                        // مسح البيانات من الحالة والتخزين
                         set({
                             user: null,
                             token: null,
@@ -109,7 +205,6 @@ const useAuthStore = create(
                     }
                 },
 
-                // تهيئة الحالة من التخزين
                 initializeAuth: () => {
                     if (typeof window === 'undefined') return;
 
@@ -127,12 +222,12 @@ const useAuthStore = create(
                 }
             };
         }, {
-            name: 'auth-storage', // اسم المفتاح في localStorage
+            name: 'auth-storage',
             partialize: (state) => ({
                 token: state.token,
                 role_name: state.role_name,
                 user: state.user
-            }), // تحديد الحقول التي نريد تخزينها
+            }),
         }
     )
 );

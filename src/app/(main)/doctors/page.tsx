@@ -1,23 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import {  useState } from "react";
 import DoctorsTable from "@/components/Doctor";
 import { MdAddCircleOutline } from "react-icons/md";
 import { X, Eye, EyeOff, User, Phone, Briefcase, Lock, Check } from 'lucide-react';
 import InputWithLabel from "@/components/InputWithLabel";
-
+import useAdminStore from "@/app/store/AdminStore";
+import {  FaTimeline } from "react-icons/fa6";
 export default function DoctorsPage() {
+    const {addUser}=useAdminStore()
+
   const [showModal, setShowModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    specialty: ''
-  });
 
+const [formData, setFormData] = useState({
+  name:'',
+  phone_number:'',
+  national_number:'',
+  role_id:"1", 
+  password:'',
+  password_confirmation:'',
+  year:''
+  });
 
   const handleClose = () => {
     setShowModal(false);
@@ -25,7 +30,8 @@ export default function DoctorsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+    addUser(formData)
+      console.log(formData)
     console.log('Form submitted');
   };
 
@@ -52,9 +58,11 @@ export default function DoctorsPage() {
 
       <DoctorsTable />
 
+     
       {showModal && (
           <div className="fixed inset-0 bg-[#0000004e] bg-opacity-60 z-50 flex items-center justify-center p-4 ">
             <div className="w-full max-w-4xl overflow-hidden transition-all duration-300 transform scale-100 bg-white shadow-2xl rounded-2xl">
+              {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-teal-500 to-teal-600">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-white rounded-lg bg-opacity-20">
@@ -70,10 +78,8 @@ export default function DoctorsPage() {
                 </button>
               </div>
 
-              {/* Form */}
               <div className="p-8">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                  {/* Left Column */}
                   <div className="space-y-6">
                     <InputWithLabel
                       label="Full Name*"
@@ -83,8 +89,28 @@ export default function DoctorsPage() {
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       required
-                    />
-
+                    /> 
+                   <div className={`flex flex-col w-full `}>
+      <label className="px-2 text-sm font-semibold text-gray-700">Year*</label>
+      <div className={`relative `}>
+        <div className={`flex items-center justify-center  px-4 transition-all duration-200 border-2 border-gray-200 bg-gray-50 rounded-xl focus-within:border-teal-500 focus-within:bg-white`}>
+         
+            <div className="mr-3 text-gray-400">
+              <FaTimeline/>
+            </div>
+          
+          <select
+            onChange={(e)=>handleInputChange('year',e.target.value)}
+            className={`w-full items-center justify-center flex py-3 bg-transparent outline-none text-gray-700 placeholder-gray-400 `}
+          >
+            <option value="fourth-year">Fourth Year</option>
+            <option value=" fifth-year">Fifth Year</option>
+          </select>
+        </div>
+      
+      </div>
+      
+    </div>
                     <div className="flex flex-col w-full gap-2">
                       <label className="px-2 text-sm font-semibold text-gray-700">Password*</label>
                       <div className="relative">
@@ -94,8 +120,8 @@ export default function DoctorsPage() {
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter your password..."
                             className="w-full py-3 text-gray-700 placeholder-gray-400 bg-transparent outline-none"
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
+                            onChange={(e) => handleInputChange('password',e.target.value)}
+                            value={formData.password}
                             required
                           />
                           <button
@@ -118,8 +144,8 @@ export default function DoctorsPage() {
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm your password..."
                             className="w-full py-3 text-gray-700 placeholder-gray-400 bg-transparent outline-none"
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            value={confirmPassword}
+                            onChange={(e) => handleInputChange('password_confirmation',e.target.value)}
+                            value={formData.password_confirmation}
                             required
                           />
                           <button
@@ -134,29 +160,27 @@ export default function DoctorsPage() {
                     </div>
                   </div>
 
-                  {/* Right Column */}
                   <div className="space-y-6">
                     <InputWithLabel
                       label="Phone Number*"
                       placeholder="Enter your phone number..."
                       type="tel"
                       icon={<Phone size={18} />}
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      value={formData.phone_number}
+                      onChange={(e) => handleInputChange('phone_number', e.target.value)}
                       required
                     />
 
                     <InputWithLabel
-                      label="Specialty*"
+                      label="National Number*"
                       placeholder="Enter your specialty..."
                       type="text"
                       icon={<Briefcase size={18} />}
-                      value={formData.specialty}
-                      onChange={(e) => handleInputChange('specialty', e.target.value)}
+                      value={formData.national_number}
+                      onChange={(e) => handleInputChange('national_number', e.target.value)}
                       required
                     />
 
-                    {/* Additional Info Box */}
                     <div className="p-4 border border-teal-200 bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl">
                       <h3 className="mb-2 text-sm font-semibold text-teal-700">Password Requirements:</h3>
                       <ul className="space-y-1 text-xs text-gray-600">
@@ -177,7 +201,6 @@ export default function DoctorsPage() {
                   </div>
                 </div>
 
-                {/* Form Actions */}
                 <div className="flex justify-end gap-4 pt-6 mt-8 border-t border-gray-200">
                   <button
                     type="button"

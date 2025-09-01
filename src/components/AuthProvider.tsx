@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import useAuthStore from "../app/(auth)/signin/AuthStore";
+import useAuthStore from "../app/store/AuthStore";
 import { usePathname, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 
@@ -10,7 +10,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-
+  localStorage.clear()
   useEffect(() => {
     // 1. تهيئة حالة المصادقة أولاً
     initializeAuth();

@@ -9,7 +9,7 @@ interface ImageUploadInputProps extends React.InputHTMLAttributes<HTMLInputEleme
   error?: string;
   containerClassName?: string;
   inputClassName?: string;
-  onFileChange?: (file: File) => void;  // callback خاص بتمرير الملف
+  onFileChange?: (file: File) => void;    
 }
 
 const ImageUploadInput: React.FC<ImageUploadInputProps> = ({
@@ -33,13 +33,11 @@ const ImageUploadInput: React.FC<ImageUploadInputProps> = ({
       };
       reader.readAsDataURL(file);
 
-      // نمرر الملف مباشرة إلى callback الخاص
       if (onFileChange) {
         onFileChange(file);
       }
     }
 
-    // ننفذ onChange الأصلي لو موجود (لأي حاجة أخرى)
     if (props.onChange) props.onChange(e);
   };
 
@@ -50,15 +48,18 @@ const ImageUploadInput: React.FC<ImageUploadInputProps> = ({
       <div
         className={`relative border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-gray-50 hover:border-teal-500 cursor-pointer transition-all duration-200 ${inputClassName}`}
         onClick={() => fileInputRef.current?.click()}
+        style={{ height: "200px" }} // تأكد من وجود ارتفاع للصورة عند استخدام fill
       >
         {preview ? (
           <Image
             src={preview}
             alt="Preview"
-            className="object-cover w-full h-full"
+            unoptimized
+            fill
+            className="object-cover"
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-10 text-sm text-gray-400">
+          <div className="flex flex-col items-center justify-center h-full py-10 text-sm text-gray-400">
             {icon && <div className="mb-2">{icon}</div>}
             {props.placeholder || "Click to upload image"}
           </div>

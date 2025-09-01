@@ -23,7 +23,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   ...props
 }) => {
   return (
-    <div className={`flex flex-col w-full gap-2 ${containerClassName}`}>
+    <div className={`flex flex-col w-full  ${containerClassName}`}>
       <label className="px-2 text-sm font-semibold text-gray-700">{label}</label>
       <div className={`relative ${inputContainerClassName}`}>
         <div className={`flex items-center justify-center ${stylecc} px-4 transition-all duration-200 border-2 border-gray-200 bg-gray-50 rounded-xl focus-within:border-teal-500 focus-within:bg-white`}>

@@ -3,24 +3,21 @@
 import Image from "next/image";
 import { useState, useMemo, useEffect } from "react";
 import {  FaPlusCircle, FaSearch } from "react-icons/fa";
-import { MdDelete, MdModeEdit } from "react-icons/md";
 import { IoFilter } from "react-icons/io5";
 import Link from "next/link";
 import useAdminStore from "@/app/store/AdminStore";
 
-const DoctorsTable = () => {
-  const {students,getStudents,delUser}=useAdminStore()
+const PatientTable = () => {
+  const {patient,getPatient,getDisease,disease}=useAdminStore()
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
  useEffect(()=>{
-getStudents()
+getPatient()
  },[])
-const mockDoctors = students?.students?.data ?? [];
-const handleDeleteUser=(id: number)=>{
-  delUser(id);
-}
+const mockDoctors = patient?.patients?.data ?? [];
+
 const filteredDoctors = useMemo(() => {
   return mockDoctors
     .filter((d: { name: string; year: string }) => {
@@ -74,12 +71,12 @@ const filteredDoctors = useMemo(() => {
 
 <th className="p-2 ">Account</th>
 <th className="p-2 ">Phone</th>
-<th className="p-2 ">Year</th>
+<th className="p-2 ">Age</th>
 <th className="p-2 ">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {doctorsToShow.map((doc:{student_id:number,name:string,phone_number:string,year:string}) => (
+          {doctorsToShow.map((doc:{student_id:number,name:string,phone_number:string,age:string}) => (
             <tr key={doc.student_id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
              <td>
               <input type="checkbox" name="" id="" />
@@ -100,26 +97,16 @@ const filteredDoctors = useMemo(() => {
 </td>
               <td className="p-2 ">{doc.phone_number}</td>
               <td className="p-2 ">
-               {doc.year}
+               {doc.age}
               </td>
               <td className="flex items-center justify-center p-2">
-              {true&&<div className="flex items-center justify-center gap-4">
-                <button onClick={() => handleDeleteUser(doc.student_id)}  className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 cursor-pointer rounded-xl group hover:text-white hover:bg-red-400">
-                  <MdDelete size={22}   className="text-red-400 group-hover:text-white"/>
-                  Delete
-                </button>
-                  
-                   <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 cursor-pointer rounded-xl group hover:text-white hover:bg-blue-400">
-                  <MdModeEdit size={22}  className="text-blue-400 group-hover:text-white"/>
-                  Edite
-                </button>
-              </div>}
-               {false&&<div>
+            
+               <div>
                   <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 cursor-pointer rounded-xl group hover:text-white hover:bg-blue-400">
                   <FaPlusCircle size={22}  className="text-blue-400 group-hover:text-white"/>
                   add request
                 </button>
-               </div>}
+               </div>
                 
               </td>
             </tr>
@@ -127,7 +114,6 @@ const filteredDoctors = useMemo(() => {
         </tbody>
       </table>
 
-      {/* Pagination */}
       <div className="flex items-center gap-2 mt-4">
         {Array.from({ length: pageCount }, (_, i) => (
           <button
@@ -147,4 +133,4 @@ const filteredDoctors = useMemo(() => {
   );
 };
 
-export default DoctorsTable;
+export default PatientTable;
