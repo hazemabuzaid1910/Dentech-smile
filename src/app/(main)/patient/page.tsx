@@ -9,6 +9,8 @@ import PatientTable from "@/components/Patients";
 import { GiBodyHeight } from "react-icons/gi";
 import { GiWeight } from "react-icons/gi";
 import useAdminStore from "@/app/store/AdminStore";
+import { MultiValue } from "react-select";
+type DiseaseOption = { value: number; label: string };
 
 export default function PatientPage() {
   const [showModalRequest, setShowModalRequest] = useState(false);
@@ -16,27 +18,31 @@ export default function PatientPage() {
 
 
   const [formData, setFormData] = useState<{
-    name: string;
-    phone: string;
-    password: string;
-    height: string;
-    weight: string;
-    birthdate: string;
-    diseases: string[];
-  }>({
-    name: "",
-    phone: "",
-    password: "",
-    height: "",
-    weight: "",
-    birthdate: "",
-    diseases: [],
-  });
+  name: string;
+  phone: string;
+  password: string;
+  height: string;
+  weight: string;
+  birthdate: string;
+  diseases: number[]; // بدل string[]
+}>({
+  name: "",
+  phone: "",
+  password: "",
+  height: "",
+  weight: "",
+  birthdate: "",
+  diseases: [],
+});
+
 useEffect(()=>{
   getDisease()
 },[])
 
-
+type Disease = {
+  id: number;
+  name: string;
+};
   const handleClose = () => {
     setShowModalRequest(false);
   };
@@ -76,12 +82,15 @@ const handleSubmit = (e: React.FormEvent) => {
 
 
 
-  const handleInputChange = (field: string, value: string | string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+const handleInputChange = (
+  field: string,
+  value: string | number | string[] | number[]
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    [field]: value,
+  }));
+};
 
   return (
     <div className="relative p-6">
@@ -199,26 +208,28 @@ const handleSubmit = (e: React.FormEvent) => {
   <label className="block mb-2 font-semibold">
     Select Diseases
   </label>
-  <Select
-    isMulti
-    options={disease?.diseases?.map((d: any) => ({
-      value: d.id,
-      label: d.name,
-    }))}
-    className="basic-multi-select"
-    classNamePrefix="select"
-    value={formData.diseases.map((id) => {
-      const found = disease?.diseases?.find((d: any) => d.id === id);
+<Select<DiseaseOption, true>
+  isMulti
+  options={disease?.diseases?.map((d: Disease) => ({
+    value: d.id,
+    label: d.name,
+  })) ?? []}
+  className="basic-multi-select"
+  classNamePrefix="select"
+  value={formData.diseases
+    .map((id) => {
+      const found = disease?.diseases?.find((d: Disease) => d.id === id);
       return found ? { value: found.id, label: found.name } : null;
-    }).filter(Boolean)}
-    onChange={(selected) =>
-      handleInputChange(
-        "diseases",
-        selected ? selected.map((s) => s.value) : []
-      )
-    }
-    placeholder="Choose diseases..."
-  />
+    })
+    .filter((v): v is DiseaseOption => v !== null)}
+  onChange={(selected: MultiValue<DiseaseOption>) =>
+    handleInputChange(
+      "diseases",
+      selected.map((s) => s.value)
+    )
+  }
+  placeholder="Choose diseases..."
+/>
 </div>
 
 

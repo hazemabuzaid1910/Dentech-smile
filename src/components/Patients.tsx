@@ -6,9 +6,9 @@ import {  FaPlusCircle, FaSearch } from "react-icons/fa";
 import { IoFilter } from "react-icons/io5";
 import Link from "next/link";
 import useAdminStore from "@/app/store/AdminStore";
-
+import RequestModal from "./RequestModal";
 const PatientTable = () => {
-  const {patient,getPatient,getDisease,disease}=useAdminStore()
+  const {patient,getPatient}=useAdminStore()
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +34,18 @@ const filteredDoctors = useMemo(() => {
   );
 
 
+const [showModalRequest, setShowModalRequest] = useState(false);
+const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
 
+const handleOpenRequestModal = (id: number) => {
+  setSelectedPatientId(id);
+  setShowModalRequest(true);
+};
+
+const handleCloseRequestModal = () => {
+  setShowModalRequest(false);
+  setSelectedPatientId(null);
+};
   return (
     
     <div className="p-6 bg-white">
@@ -76,8 +87,8 @@ const filteredDoctors = useMemo(() => {
           </tr>
         </thead>
         <tbody>
-          {doctorsToShow.map((doc:{student_id:number,name:string,phone_number:string,age:string}) => (
-            <tr key={doc.student_id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
+          {doctorsToShow.map((doc:{id:number,name:string,phone_number:string,age:string}) => (
+            <tr key={doc.id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
              <td>
               <input type="checkbox" name="" id="" />
              </td>
@@ -102,10 +113,13 @@ const filteredDoctors = useMemo(() => {
               <td className="flex items-center justify-center p-2">
             
                <div>
-                  <button className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 cursor-pointer rounded-xl group hover:text-white hover:bg-blue-400">
-                  <FaPlusCircle size={22}  className="text-blue-400 group-hover:text-white"/>
-                  add request
-                </button>
+                 <button
+  onClick={() => handleOpenRequestModal(doc.id)}
+  className="flex items-center gap-2 p-2 transition duration-300 bg-gray-100 cursor-pointer rounded-xl group hover:text-white hover:bg-blue-400"
+>
+  <FaPlusCircle size={22} className="text-blue-400 group-hover:text-white" />
+  add request
+</button>
                </div>
                 
               </td>
@@ -129,7 +143,14 @@ const filteredDoctors = useMemo(() => {
           </button>
         ))}
       </div>
+      {showModalRequest && (
+  <RequestModal
+    patientId={selectedPatientId}
+    onClose={handleCloseRequestModal}
+  />
+)}
     </div>
+    
   );
 };
 

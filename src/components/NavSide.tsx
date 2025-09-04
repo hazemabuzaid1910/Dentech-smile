@@ -47,7 +47,7 @@ function NavSide() {
               Students
             </Link>
           </li>}
-          {(isAdmission || isRadiology) && (
+          {( isRadiology) && (
   <li>
     <Link
       href="/patient"

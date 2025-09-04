@@ -12,6 +12,9 @@ const useAdminStore = create((set) => {
         statistics: [],
         Rad_statistics: [],
         disease: [],
+        detailesReq: [],
+        patientrequsest: [],
+        allstages: [],
         addUser: async(formData) => {
             const token = localStorage.getItem('token');
 
@@ -344,6 +347,103 @@ const useAdminStore = create((set) => {
 
             console.log('User added successfully:', data);
             set({ patient: data });
+            return data;
+        },
+        getDetailesReq: async(id) => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/request-details', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json", // 🔑 مهم
+
+
+                },
+                body: JSON.stringify({ request_id: id }), // 👈 نحول الكائن لـ JSON
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
+            set({ detailesReq: data });
+            return data;
+        },
+        getPatientReq: async() => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/all-requests', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
+            set({ patientrequsest: data });
+            return data;
+        },
+        getAllStages: async() => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/all-stage', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
+            set({ allstages: data });
+            return data;
+        },
+        AssignPatient: async(id, stg_id) => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/assign-patient', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json",
+
+
+                },
+                body: JSON.stringify({ request_id: id, stage_id: stg_id }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
             return data;
         },
     }
