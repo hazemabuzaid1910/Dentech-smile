@@ -17,7 +17,7 @@ const DoctorsTable = () => {
  useEffect(()=>{
 getStudents()
  },[])
-const mockDoctors = students?.students?.data ?? [];
+const mockDoctors = students?.students ?? [];
 const handleDeleteUser=(id: number)=>{
   delUser(id);
 }
