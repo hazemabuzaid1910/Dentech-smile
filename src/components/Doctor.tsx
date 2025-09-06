@@ -16,7 +16,7 @@ const DoctorsTable = () => {
   const itemsPerPage = 10;
  useEffect(()=>{
 getStudents()
- },[])
+ },[getStudents])
 const mockDoctors = students?.students ?? [];
 const handleDeleteUser=(id: number)=>{
   delUser(id);
@@ -92,7 +92,7 @@ const filteredDoctors = useMemo(() => {
     <Link href="/stdaccount" className="flex hover:text-[var(--blue-sky)] group items-center justify-center gap-2">
     <div>
       <Image
-      src={doc.profile_image?doc.profile_image:"/example/hr/15.png"}
+      src={doc.profile_image?`http://127.0.0.1:8000/storage/${doc.profile_image}`:"/example/hr/15.png"}
       alt={doc.name}
       className="rounded-full "
       width={40}
