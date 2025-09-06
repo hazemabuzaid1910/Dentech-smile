@@ -70,7 +70,7 @@ const filteredDoctors = useMemo(() => {
       <table className="min-w-full rounded ">
         <thead>
           <tr className="text-[var(--secondary-color)] border-b border-gray-200">
-               <th className="p-2 "><input type="checkbox" className=""/></th>
+               <th className="p-2 ">#</th>
 
 <th className="p-2 ">Account</th>
 <th className="p-2 ">Phone</th>
@@ -79,16 +79,20 @@ const filteredDoctors = useMemo(() => {
           </tr>
         </thead>
         <tbody>
-          {doctorsToShow.map((doc:{student_id:number,name:string,phone_number:string,year:string}) => (
+          {doctorsToShow.map((doc:{
+            profile_image: string;student_id:number,name:string,phone_number:string,year:string
+}) => (
             <tr key={doc.student_id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
              <td>
-              <input type="checkbox" name="" id="" />
-             </td>
+   <div className="inline-block px-3 py-2 text-sm font-bold text-center text-white rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 w-fit">
+                      #{doc.student_id}
+                    </div>   
+                              </td>
              <td className="p-2">
     <Link href="/stdaccount" className="flex hover:text-[var(--blue-sky)] group items-center justify-center gap-2">
     <div>
       <Image
-      src="/example/hr/15.png"
+      src={doc.profile_image?doc.profile_image:"/example/hr/15.png"}
       alt={doc.name}
       className="rounded-full "
       width={40}

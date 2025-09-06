@@ -12,7 +12,6 @@ import {
 import { useRouter, useParams } from "next/navigation";
 import useAdminStore from "@/app/store/AdminStore";
 import Image from "next/image";
-
 interface Patient {
   name: string;
   phone: string;
@@ -50,6 +49,8 @@ const { id } = useParams();
   const [stages, setStages] = useState([]);
   const [selectedStage, setSelectedStage] = useState<number | "">("");
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
 useEffect(() => {
   const fetchData = async () => {
     setLoading(true);
@@ -65,7 +66,7 @@ useEffect(() => {
     setLoading(false);
   };
   fetchData();
-}, [id]);
+}, [getAllStages, getDetailesReq, id]);
 
 
 
@@ -167,28 +168,23 @@ const handleAssignStage = async () => {
   {radiology_images?.map((img, idx) => (
     <div
       key={idx}
-      className="overflow-hidden transition-all duration-300 bg-gray-100 rounded-xl hover:shadow-lg"
+      className="overflow-hidden transition-all duration-300 bg-gray-100 cursor-pointer rounded-xl hover:shadow-lg"
+      onClick={() => setSelectedImage(`http://127.0.0.1:8000/storage/${img.url}`)}
     >
       <Image
         src={`http://127.0.0.1:8000/storage/${img.url}`}
         alt={img.type}
-        width={500}   
+        width={500}
         height={256}
         className="object-cover w-full h-64"
       />
       <div className="p-2 text-sm text-center text-gray-600 bg-white">
-        <Image
-          src={`http://127.0.0.1:8000/storage/${img.url}`}
-          alt="icon"
-          width={16}
-          height={16}
-          className="inline mr-1 rounded"
-        />{" "}
         {img.type}
       </div>
     </div>
   ))}
 </div>
+
 
           )}
         </div>
@@ -230,6 +226,24 @@ const handleAssignStage = async () => {
     </div>
   )}
 </div>
+{selectedImage && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+    <button
+      onClick={() => setSelectedImage(null)}
+      className="absolute text-3xl font-bold text-white top-4 right-4 hover:text-gray-300"
+    >
+      ×
+    </button>
+    <Image
+      src={selectedImage}
+      alt="Full Screen"
+      width={1200}
+      height={800}
+      className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-lg"
+    />
+  </div>
+)}
+
 
       </div>
     </div>

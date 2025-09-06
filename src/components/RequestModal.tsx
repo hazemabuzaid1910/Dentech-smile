@@ -124,28 +124,7 @@ export default function RequestModal({ patientId, onClose }: RequestModalProps) 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{xray?: string, realImage?: string}>({});
 
-  const handleUpload = async (file: File, type: "x-ray" | "real-image") => {
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("patient_id", String(patientId || 1)); // استخدم 1 كقيمة افتراضية للاختبار
-    formData.append("type", type);
-    formData.append("image", file);
 
-    const res = await fetch("http://127.0.0.1:8000/api/radiology-uploadImage", {
-      method: "POST",
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-
-      },
-      body: formData,
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to upload " + type);
-    }
-    return await res.json();
-  };
 
   const validateFiles = () => {
     const newErrors: {xray?: string, realImage?: string} = {};
@@ -161,40 +140,56 @@ export default function RequestModal({ patientId, onClose }: RequestModalProps) 
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
-    if (!validateFiles()) {
-      return;
-    }
-    
-    // Debug: Check files before submission
-    console.log("Files before submission:", {
-      xray: xray?.name,
-      xraySize: xray?.size,
-      realImage: realImage?.name, 
-      realImageSize: realImage?.size,
-      patientId: patientId
+const handleSubmit = async () => {
+  if (!validateFiles()) {
+    return;
+  }
+
+  console.log("Files before submission:", {
+    xray: xray?.name,
+    realImage: realImage?.name,
+    patientId: patientId,
+  });
+
+  try {
+    setLoading(true);
+    setErrors({});
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+
+    formData.append("patient_id", String(patientId || 1));
+    formData.append("image[0]", xray!);
+    formData.append("type[0]", "x-ray");
+    formData.append("image[1]", realImage!);
+    formData.append("type[1]", "real-image");
+
+    const res = await fetch("http://127.0.0.1:8000/api/radiology-uploadImage", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      body: formData,
     });
-    
-    try {
-      setLoading(true);
-      setErrors({});
-      
-      // إرسال كل صورة بطلب منفصل
-      console.log("Uploading X-Ray...");
-      await handleUpload(xray!, "x-ray");
-      
-      console.log("Uploading Real Image...");
-      await handleUpload(realImage!, "real-image");
-      
-      alert("Request created successfully!");
-      onClose();
-    } catch (err) {
-      console.error(err);
-      alert("Error uploading images. Please try again.");
-    } finally {
-      setLoading(false);
+
+    if (!res.ok) {
+      throw new Error("Failed to upload images");
     }
-  };
+
+    const data = await res.json();
+    console.log("Response:", data);
+
+    alert("Request created successfully!");
+    onClose();
+  } catch (err) {
+    console.error(err);
+    alert("Error uploading images. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs">

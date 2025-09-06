@@ -20,7 +20,6 @@ export default function Home() {
      const {getStatistic,statistics,getRadStatistic,Rad_statistics}=useAdminStore()
   const isRadiology=role_name==="radiologyManager";
     const isAdmin=role_name==="admin";
-  const isAdmission=role_name==="AdmissionManager";
   useEffect(()=>{
     if(role_name==="admin"){
 getStatistic()

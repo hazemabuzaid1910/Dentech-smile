@@ -103,6 +103,7 @@ const [formData, setFormData] = useState({
             onChange={(e)=>handleInputChange('year',e.target.value)}
             className={`w-full items-center justify-center flex py-3 bg-transparent outline-none text-gray-700 placeholder-gray-400 `}
           >
+            <option value="fourth-year"></option>
             <option value="fourth-year">Fourth Year</option>
             <option value=" fifth-year">Fifth Year</option>
           </select>
