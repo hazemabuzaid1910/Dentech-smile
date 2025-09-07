@@ -136,7 +136,9 @@ getstaticAdmission()
     { id: 4, type: 'Nursing', students: 180, graduated: 60, created_at: '2024-01-13' },
   ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let tableData: any[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let tableColumns: any[] = [];
 
 if (isRadiology) {

@@ -87,7 +87,7 @@ const handleCloseRequestModal = () => {
           </tr>
         </thead>
         <tbody>
-          {doctorsToShow.map((doc:{id:number,name:string,phone_number:string,age:string}) => (
+          {Array.isArray(doctorsToShow) && doctorsToShow.map((doc:{id:number,name:string,phone_number:string,age:string}) => (
             <tr key={doc.id} className="text-center text-gray-400 transition duration-300 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
              <td>
                 <div className="inline-block px-3 py-2 text-sm font-bold text-center text-white rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 w-fit">

@@ -104,7 +104,7 @@ useEffect(() => {
   getStages();
   getSuperVisor();
   fetchSchedule();
-}, [selectedYear]);
+}, [getSchedule, getStages, getSuperVisor, selectedYear]);
 
 
   const days: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
