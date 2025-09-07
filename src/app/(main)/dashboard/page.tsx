@@ -15,6 +15,7 @@ import { MdOutlineSupervisorAccount } from "react-icons/md";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { FaImage } from "react-icons/fa";
 import Image from "next/image";
+import { BarChart3, CheckCircle, Clock } from "lucide-react";
 
 export default function Home() {
   const {role_name}=useAuthStore();
@@ -107,8 +108,27 @@ getstaticAdmission()
       color: "bg-[#14BEBF]"
     },
   ];
+    const staticData = [
+    {
+      h1: admissionstat?.data?.[0].request_count ?? "0", 
+      p: "Total Request",
+      icon: <CheckCircle color="#ffffff" size={25} />,
+      color: "bg-[#FF1C93]"
+    },
+    {
+      h1: admissionstat?.data?.[0].assign_request_count ?? "0",
+      p: "Assigned request",
+      icon: <BarChart3 color="#ffffff" size={25} />,
+      color: "bg-[#0780FA]"
+    },
+    {
+      h1: admissionstat?.data?.[0].unassign_request_count ?? "0",
+      p: "Unassign request",
+      icon: <Clock color="#ffffff" size={25} />,
+      color: "bg-[#14BEBF]"
+    },
+  ];
 
-  // ✅ بيانات افتراضية في حال recent_image فارغة
   const fallbackData = [
     { id: 1, type: 'Dentistry', students: 120, graduated: 30, created_at: '2024-01-10' },
     { id: 2, type: 'Medicine', students: 200, graduated: 50, created_at: '2024-01-11' },
@@ -183,7 +203,7 @@ if (isRadiology) {
                 />
               </div>
             ))
-          : statsData.map((item, index) => (
+          : (isAdmin)?statsData.map((item, index) => (
               <div key={index} className="col-span-4">
                 <StatisticsCard 
                   color={item.color}
@@ -192,7 +212,15 @@ if (isRadiology) {
                   value={item.h1}
                 />
               </div>
-            ))
+            )): staticData.map((item, index) => (
+              <div key={index} className="col-span-4">
+                <StatisticsCard 
+                  color={item.color}
+                  icon={item.icon}
+                  title={item.p}
+                  value={item.h1}
+                />
+              </div>))
         }
 
         <div className={`flex w-full ${isAdmin?"col-span-8":"col-span-12"} p-5 bg-white rounded-xl`}>
@@ -218,10 +246,10 @@ if (isRadiology) {
             </div>
           </div>
         }
+        
 
         <div className="col-span-12">
           <div className="bg-white rounded-xl p-4 h-[300px] overflow-y-auto">
-           <h1 className="text-[18px] font-bold px-2 py-4">Recent Image</h1>
       <Table
   data={tableData}
   columns={tableColumns}
