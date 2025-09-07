@@ -165,7 +165,7 @@ const handleAssignStage = async () => {
           ) : (
 
 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-  {radiology_images?.map((img, idx) => (
+  {Array.isArray(radiology_images) &&radiology_images?.map((img, idx) => (
     <div
       key={idx}
       className="overflow-hidden transition-all duration-300 bg-gray-100 cursor-pointer rounded-xl hover:shadow-lg"
