@@ -7,6 +7,7 @@ import { MdDelete, MdModeEdit } from "react-icons/md";
 import { IoFilter } from "react-icons/io5";
 import Link from "next/link";
 import useAdminStore from "@/app/store/AdminStore";
+import React from "react";
 
 const DoctorsTable = () => {
   const {students,getStudents,delUser}=useAdminStore()
@@ -92,7 +93,7 @@ const filteredDoctors = useMemo(() => {
     <Link href="/stdaccount" className="flex hover:text-[var(--blue-sky)] group items-center justify-center gap-2">
     <div>
       <Image
-      src={doc.profile_image?`http://127.0.0.1:8000/storage/${doc.profile_image}`:"/example/hr/15.png"}
+      src={doc.profile_image?`http://127.0.0.1:8000/storage/student_profiles/${doc.profile_image}`:"/example/hr/15.png"}
       alt={doc.name}
       className="rounded-full "
       width={40}
@@ -131,22 +132,53 @@ const filteredDoctors = useMemo(() => {
         </tbody>
       </table>
 
-      {/* Pagination */}
-      <div className="flex items-center gap-2 mt-4">
-        {Array.from({ length: pageCount }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-3 py-1 rounded border-b ${
-              currentPage === i + 1
-                ? "bg-[var(--secondary-color)] text-white"
-                : "bg-white text-black"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+<div className="flex items-center gap-2 mt-4">
+  <button
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+    className="px-3 py-1 bg-white border rounded disabled:opacity-50"
+  >
+    «
+  </button>
+
+  {Array.from({ length: pageCount }, (_, i) => i + 1)
+    .filter((page) => {
+      
+      return (
+        page === 1 ||
+        page === pageCount ||
+        (page >= currentPage - 3 && page <= currentPage + 3)
+      );
+    })
+    .map((page, index, arr) => (
+      <React.Fragment key={page}>
+        {index > 0 && arr[index] - arr[index - 1] > 1 && (
+          <span className="px-2">...</span> 
+        )}
+        <button
+          onClick={() => setCurrentPage(page)}
+          className={`px-3 py-1 rounded border ${
+            currentPage === page
+              ? "bg-[var(--secondary-color)] text-white"
+              : "bg-white text-black"
+          }`}
+        >
+          {page}
+        </button>
+      </React.Fragment>
+    ))}
+
+  <button
+    disabled={currentPage === pageCount}
+    onClick={() =>
+      setCurrentPage((prev) => Math.min(prev + 1, pageCount))
+    }
+    className="px-3 py-1 bg-white border rounded disabled:opacity-50"
+  >
+    »
+  </button>
+</div>
+
     </div>
   );
 };

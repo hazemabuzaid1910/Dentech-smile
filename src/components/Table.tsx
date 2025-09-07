@@ -1,6 +1,5 @@
 "use client";
 
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import { ReactNode } from 'react';
 
 type Column<T> = {
@@ -17,7 +16,7 @@ type Props<T> = {
   onView: (row: T) => void;
 };
 
-function DataTable<T>({ data, columns, onEdit, onDelete, onView }: Props<T>) {
+function DataTable<T>({ data, columns }: Props<T>) {
   return (
     <div className="overflow-hidden bg-white rounded-xl">
       <div className="overflow-x-auto">
@@ -29,7 +28,6 @@ function DataTable<T>({ data, columns, onEdit, onDelete, onView }: Props<T>) {
                   {col.header}
                 </th>
               ))}
-              <th className="px-6 py-4 font-medium text-left">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-300">
@@ -40,28 +38,7 @@ function DataTable<T>({ data, columns, onEdit, onDelete, onView }: Props<T>) {
                     {col.render ? col.render(row[col.key], row) : String(row[col.key])}
                   </td>
                 ))}
-                <td className="px-6 py-4">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => onView(row)}
-                      className="p-2 text-blue-400 rounded hover:bg-blue-400 hover:bg-opacity-20"
-                    >
-                      <FaEye size={16} />
-                    </button>
-                    <button
-                      onClick={() => onEdit(row)}
-                      className="p-2 text-green-400 rounded hover:bg-green-400 hover:bg-opacity-20"
-                    >
-                      <FaEdit size={16} />
-                    </button>
-                    <button
-                      onClick={() => onDelete(row)}
-                      className="p-2 text-red-400 rounded hover:bg-red-400 hover:bg-opacity-20"
-                    >
-                      <FaTrash size={16} />
-                    </button>
-                  </div>
-                </td>
+          
               </tr>
             ))}
           </tbody>

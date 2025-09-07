@@ -15,6 +15,8 @@ const useAdminStore = create((set) => {
         detailesReq: [],
         patientrequsest: [],
         allstages: [],
+        recent_image: [],
+        admissionstat: [],
         addUser: async(formData) => {
             const token = localStorage.getItem('token');
 
@@ -444,6 +446,52 @@ const useAdminStore = create((set) => {
             }
 
             console.log('User added successfully:', data);
+            return data;
+        },
+        getRecentImage: async() => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/recent-images', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
+            set({ recent_image: data });
+            return data;
+        },
+        getstaticAdmission: async() => {
+            const token = localStorage.getItem('token');
+            console.log(token)
+            const response = await fetch('http://127.0.0.1:8000/api/admission-weekly-summary', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Validation errors:', data.errors);
+                throw new Error(data.message || 'Failed to add schedule');
+            }
+
+            console.log('User added successfully:', data);
+            set({ admissionstat: data });
             return data;
         },
     }
