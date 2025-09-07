@@ -153,6 +153,8 @@ if (isRadiology) {
         <Image
           src={`http://127.0.0.1:8000/storage/${url}`}
           alt="radiology"
+          width={50}
+          height={50}
           className="object-cover w-20 h-20 rounded-md"
         />
       ),
